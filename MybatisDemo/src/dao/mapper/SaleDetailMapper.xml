@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.ISaleDetailDAO">
+    <select id="lsh" parameterType="String" resultType="String">
+        select max(right(lsh,4)) as lastNo
+        from tsaledetail
+        where left(lsh,8) =#{Date}
+    </select>
+
+    <insert id="addDetail" parameterType="vo.SaleDetail">
+        insert into tsaledetail (lsh,barCode,productName,price,count,operator,saleTime)
+        values(#{lsh},#{barCode},#{productName},#{price},#{count},#{operator},#{saleTime})
+    </insert>
+
+    <select id="readSaleDetail" resultType="vo.SaleDetail">
+        select * from tsaledetail
+    </select>
+
+    <select id="totalSaleMoney" parameterType="String" resultType="double">
+        select ifnull(sum(price*count),0) as totalSaleMoney
+        from tsaledetail
+        where left(saleTime,10)=#{saleTime}
+    </select>
+
+    <select id="querySaleDetail" parameterType="String" resultType="vo.SaleDetail">
+        select * from tsaledetail where left(saleTime,10)=#{saleTime}
+    </select>
+</mapper>
